@@ -1,0 +1,126 @@
+import Link from 'next/link'
+
+export function Footer() {
+  return (
+    <footer className="border-t border-[var(--border-subtle)]">
+      <div className="max-w-6xl mx-auto px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          {/* Brand */}
+          <div className="md:col-span-1">
+            <Link href="/" className="flex items-center gap-2 no-underline mb-3">
+              <span className="text-xl text-[var(--accent-primary)]">⌘</span>
+              <span className="text-lg font-bold text-[var(--text-primary)]">prompt.gallery</span>
+            </Link>
+            <p className="text-sm text-[var(--text-muted)]">
+              The first marketplace for prompt journeys.
+            </p>
+          </div>
+          
+          {/* Browse */}
+          <div>
+            <h4 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Browse</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                  All Prompts
+                </Link>
+              </li>
+              <li>
+                <Link href="/showcases" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                  Showcases
+                </Link>
+              </li>
+              <li>
+                <Link href="/showcases?category=web" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                  Web Apps
+                </Link>
+              </li>
+              <li>
+                <Link href="/showcases?category=automation" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                  Automation
+                </Link>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Creators */}
+          <div>
+            <h4 className="text-sm font-semibold text-[var(--text-primary)] mb-3">For Creators</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/export" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                  Upload Showcase
+                </Link>
+              </li>
+              <li>
+                <Link href="/dashboard" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                  Creator Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link href="/about#pricing" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                  Pricing & Payouts
+                </Link>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Company */}
+          <div>
+            <h4 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Company</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/about" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <a 
+                  href="https://github.com/rohunvora/prmpt-hstry" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                >
+                  GitHub
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="pt-8 border-t border-[var(--border-subtle)] text-center text-sm text-[var(--text-muted)]">
+          <p>
+            © {new Date().getFullYear()} prompt.gallery. Built with{' '}
+            <a 
+              href="https://cursor.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[var(--accent-primary)] hover:text-[var(--accent-secondary)]"
+            >
+              Cursor
+            </a>
+            {' '}+{' '}
+            <a 
+              href="https://anthropic.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[var(--accent-primary)] hover:text-[var(--accent-secondary)]"
+            >
+              Claude
+            </a>
+          </p>
+        </div>
+      </div>
+    </footer>
+  )
+}

@@ -16,14 +16,27 @@ Easy way to share entire prompt history, tied to a finished product so people ca
 
 ## Installation
 
+### Local Development
+
+Clone the repository and install:
+
 ```bash
-npm install -g prmpt-hstry
+git clone https://github.com/rohunvora/prmpt-hstry.git
+cd prmpt-hstry
+npm install
+npm link  # For local testing
 ```
 
-Or use it locally in your project:
+### Or use directly with Node.js
 
 ```bash
-npm install prmpt-hstry
+node /path/to/cli.js <command>
+```
+
+### Future: npm package (coming soon)
+
+```bash
+npm install -g prmpt-hstry
 ```
 
 ## CLI Usage

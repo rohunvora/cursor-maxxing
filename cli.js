@@ -22,14 +22,19 @@ program
   .option('-n, --name <name>', 'Project name')
   .option('-d, --description <description>', 'Project description')
   .action((options) => {
-    if (fs.existsSync(HISTORY_FILE)) {
-      console.log('Prompt history already exists. Use "add" to add new prompts.');
-      return;
+    try {
+      if (fs.existsSync(HISTORY_FILE)) {
+        console.log('Prompt history already exists. Use "add" to add new prompts.');
+        return;
+      }
+      
+      history.init(options.name || '', options.description || '');
+      console.log('✓ Initialized prompt history');
+      if (options.name) console.log(`  Project: ${options.name}`);
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+      process.exit(1);
     }
-    
-    history.init(options.name || '', options.description || '');
-    console.log('✓ Initialized prompt history');
-    if (options.name) console.log(`  Project: ${options.name}`);
   });
 
 // Add a prompt to the history
@@ -41,20 +46,25 @@ program
   .option('-t, --tags <tags>', 'Comma-separated tags')
   .option('-n, --note <note>', 'Additional notes')
   .action((options) => {
-    if (!options.prompt) {
-      console.error('Error: Prompt text is required. Use -p or --prompt');
+    try {
+      if (!options.prompt) {
+        console.error('Error: Prompt text is required. Use -p or --prompt');
+        process.exit(1);
+      }
+      
+      const tags = options.tags ? options.tags.split(',').map(t => t.trim()) : [];
+      const entry = history.addPrompt(
+        options.prompt,
+        options.response || '',
+        tags,
+        options.note || ''
+      );
+      
+      console.log(`✓ Added prompt #${entry.id}`);
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
       process.exit(1);
     }
-    
-    const tags = options.tags ? options.tags.split(',').map(t => t.trim()) : [];
-    const entry = history.addPrompt(
-      options.prompt,
-      options.response || '',
-      tags,
-      options.note || ''
-    );
-    
-    console.log(`✓ Added prompt #${entry.id}`);
   });
 
 // View the prompt history

@@ -3,30 +3,12 @@
 const { Command } = require('commander');
 const fs = require('fs');
 const path = require('path');
+const PromptHistory = require('./index.js');
 
 const program = new Command();
 
 const HISTORY_FILE = '.prmpt-hstry.json';
-
-// Helper function to read history file
-function readHistory() {
-  if (!fs.existsSync(HISTORY_FILE)) {
-    return {
-      project: '',
-      description: '',
-      prompts: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-  }
-  return JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf8'));
-}
-
-// Helper function to write history file
-function writeHistory(data) {
-  data.updatedAt = new Date().toISOString();
-  fs.writeFileSync(HISTORY_FILE, JSON.stringify(data, null, 2));
-}
+const history = new PromptHistory(HISTORY_FILE);
 
 program
   .name('prmpt-hstry')
@@ -45,17 +27,9 @@ program
       return;
     }
     
-    const history = {
-      project: options.name || '',
-      description: options.description || '',
-      prompts: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    
-    writeHistory(history);
+    history.init(options.name || '', options.description || '');
     console.log('✓ Initialized prompt history');
-    if (history.project) console.log(`  Project: ${history.project}`);
+    if (options.name) console.log(`  Project: ${options.name}`);
   });
 
 // Add a prompt to the history
@@ -67,24 +41,18 @@ program
   .option('-t, --tags <tags>', 'Comma-separated tags')
   .option('-n, --note <note>', 'Additional notes')
   .action((options) => {
-    const history = readHistory();
-    
     if (!options.prompt) {
       console.error('Error: Prompt text is required. Use -p or --prompt');
       process.exit(1);
     }
     
-    const entry = {
-      id: history.prompts.length + 1,
-      prompt: options.prompt,
-      response: options.response || '',
-      tags: options.tags ? options.tags.split(',').map(t => t.trim()) : [],
-      note: options.note || '',
-      timestamp: new Date().toISOString()
-    };
-    
-    history.prompts.push(entry);
-    writeHistory(history);
+    const tags = options.tags ? options.tags.split(',').map(t => t.trim()) : [];
+    const entry = history.addPrompt(
+      options.prompt,
+      options.response || '',
+      tags,
+      options.note || ''
+    );
     
     console.log(`✓ Added prompt #${entry.id}`);
   });
@@ -96,15 +64,15 @@ program
   .option('-i, --id <number>', 'View specific prompt by ID')
   .option('-f, --full', 'Show full details')
   .action((options) => {
-    const history = readHistory();
+    const data = history.load();
     
-    if (history.prompts.length === 0) {
+    if (!data || data.prompts.length === 0) {
       console.log('No prompts in history yet. Use "add" to add prompts.');
       return;
     }
     
     if (options.id) {
-      const prompt = history.prompts.find(p => p.id === parseInt(options.id));
+      const prompt = history.getPrompt(parseInt(options.id));
       if (!prompt) {
         console.log(`Prompt #${options.id} not found.`);
         return;
@@ -126,15 +94,15 @@ program
       }
       console.log('\n');
     } else {
-      if (history.project) {
-        console.log(`\nProject: ${history.project}`);
+      if (data.project) {
+        console.log(`\nProject: ${data.project}`);
       }
-      if (history.description) {
-        console.log(`Description: ${history.description}\n`);
+      if (data.description) {
+        console.log(`Description: ${data.description}\n`);
       }
-      console.log(`Total prompts: ${history.prompts.length}\n`);
+      console.log(`Total prompts: ${data.prompts.length}\n`);
       
-      history.prompts.forEach(p => {
+      data.prompts.forEach(p => {
         console.log(`#${p.id} - ${new Date(p.timestamp).toLocaleString()}`);
         if (options.full) {
           console.log(`  Prompt: ${p.prompt.substring(0, 100)}${p.prompt.length > 100 ? '...' : ''}`);
@@ -154,54 +122,19 @@ program
   .option('-o, --output <file>', 'Output file (default: prmpt-hstry-export.json)')
   .option('-m, --markdown', 'Export as Markdown instead of JSON')
   .action((options) => {
-    const history = readHistory();
     const outputFile = options.output || (options.markdown ? 'prmpt-hstry-export.md' : 'prmpt-hstry-export.json');
     
-    if (options.markdown) {
-      let markdown = '# Prompt History\n\n';
-      
-      if (history.project) {
-        markdown += `**Project:** ${history.project}\n\n`;
+    try {
+      if (options.markdown) {
+        history.exportToMarkdown(outputFile);
+      } else {
+        history.exportToJson(outputFile);
       }
-      if (history.description) {
-        markdown += `**Description:** ${history.description}\n\n`;
-      }
-      
-      markdown += `**Created:** ${new Date(history.createdAt).toLocaleString()}\n`;
-      markdown += `**Last Updated:** ${new Date(history.updatedAt).toLocaleString()}\n`;
-      markdown += `**Total Prompts:** ${history.prompts.length}\n\n`;
-      markdown += '---\n\n';
-      
-      history.prompts.forEach(p => {
-        markdown += `## Prompt #${p.id}\n\n`;
-        markdown += `**Date:** ${new Date(p.timestamp).toLocaleString()}\n\n`;
-        
-        if (p.tags.length > 0) {
-          markdown += `**Tags:** ${p.tags.map(t => `\`${t}\``).join(', ')}\n\n`;
-        }
-        
-        markdown += `### Prompt\n\n`;
-        markdown += `${p.prompt}\n\n`;
-        
-        if (p.response) {
-          markdown += `### Response\n\n`;
-          markdown += `${p.response}\n\n`;
-        }
-        
-        if (p.note) {
-          markdown += `### Note\n\n`;
-          markdown += `${p.note}\n\n`;
-        }
-        
-        markdown += '---\n\n';
-      });
-      
-      fs.writeFileSync(outputFile, markdown);
-    } else {
-      fs.writeFileSync(outputFile, JSON.stringify(history, null, 2));
+      console.log(`✓ Exported to ${outputFile}`);
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+      process.exit(1);
     }
-    
-    console.log(`✓ Exported to ${outputFile}`);
   });
 
 // Clear/reset history
@@ -220,7 +153,7 @@ program
       return;
     }
     
-    fs.unlinkSync(HISTORY_FILE);
+    history.clear();
     console.log('✓ History cleared');
   });
 

@@ -1,3 +1,11 @@
+<div align="center">
+  <img src="/.github/social-preview.png" alt="prmpt-hstry" width="800" />
+  <p><strong>A curated gallery of AI prompts that actually work, with one-click copy and filtering.</strong></p>
+  <p>
+    <a href="https://prmpt-hstry.vercel.app"><strong>🚀 Live Demo</strong></a>
+  </p>
+</div>
+
 # prompt.gallery
 
 **A curated collection of AI prompts that actually work.** Browse proven prompts across coding, writing, analysis, and creative categories with one-click copy functionality. Think [reallygoodemails.com](https://reallygoodemails.com) but for AI prompts - no fluff, just prompts that deliver results tied to real finished products so you can learn what actually works.

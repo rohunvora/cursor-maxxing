@@ -58,6 +58,31 @@ Edit `index.html` and add a new prompt card:
 
 Available categories: `coding`, `writing`, `analysis`, `creative`, `system`
 
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Static["📄 Static Files"]
+        HTML[index.html]
+        CSS[styles.css]
+        JS[script.js]
+    end
+    
+    subgraph UX["✨ User Flow"]
+        Browse[Browse]
+        Filter[Filter]
+        Copy[One-Click Copy]
+    end
+    
+    HTML --> Browse
+    CSS --> Browse
+    JS --> Filter
+    JS --> Copy
+    
+    style Static fill:#0c0a09,stroke:#78716c,color:#fff
+    style UX fill:#0c0a09,stroke:#fcd34d,color:#fff
+```
+
 ## Tech Stack
 
 - **Pure HTML/CSS/JS** — No build step, no dependencies, just works

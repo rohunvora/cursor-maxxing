@@ -25,9 +25,9 @@ export function PromptCard({ title, description, category, modelTag, prompt }: P
   }
 
   return (
-    <article className="h-full bg-bg-card border border-border-subtle rounded-2xl p-8 transition-all duration-150 hover:border-border-medium hover:-translate-y-0.5 animate-fadeIn flex flex-col">
+    <article className="h-full bg-bg-card border border-border-subtle rounded-2xl p-7 transition-all duration-150 hover:border-border-medium hover:-translate-y-0.5 animate-fadeIn flex flex-col">
       {/* Category badge + model tag */}
-      <div className="flex items-center gap-3 mb-5">
+      <div className="flex items-center gap-3 mb-4">
         <span className="font-mono text-[0.7rem] font-semibold uppercase tracking-wide px-3 py-1.5 bg-accent-light text-accent-primary rounded-lg">
           {category}
         </span>
@@ -35,12 +35,12 @@ export function PromptCard({ title, description, category, modelTag, prompt }: P
       </div>
       
       {/* Title */}
-      <h2 className="text-lg font-semibold tracking-tight mb-3 text-text-primary">
+      <h2 className="text-lg font-semibold tracking-tight mb-2 text-text-primary">
         {title}
       </h2>
       
       {/* Description */}
-      <p className="text-sm text-text-secondary mb-6 leading-relaxed">
+      <p className="text-sm text-text-secondary mb-5 leading-relaxed">
         {description}
       </p>
       

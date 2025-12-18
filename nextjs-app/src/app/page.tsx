@@ -50,17 +50,17 @@ export default function PromptsPage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="pt-16 pb-12 px-6 md:pt-20 md:pb-16">
+        <section className="pt-24 pb-16 px-6 md:pt-32 md:pb-20">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-text-primary mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-text-primary mb-8">
               Prompts that actually work
             </h1>
-            <p className="text-lg text-text-secondary mb-12">
+            <p className="text-xl text-text-secondary mb-16">
               Curated collection of battle-tested prompts. Click to copy, paste to use.
             </p>
             
             {/* Search Bar */}
-            <div className="relative max-w-md mx-auto mb-20">
+            <div className="relative max-w-lg mx-auto">
               <Search 
                 size={20} 
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" 
@@ -76,8 +76,8 @@ export default function PromptsPage() {
           </div>
         </section>
 
-        {/* Filters */}
-        <nav className="flex justify-center flex-wrap gap-3 px-6 pb-16">
+        {/* Filters - with significant spacing from search */}
+        <nav className="flex justify-center flex-wrap gap-3 px-6 pt-16 pb-20">
           {categories.map(cat => (
             <button
               key={cat.value}
@@ -102,8 +102,8 @@ export default function PromptsPage() {
           </div>
         )}
 
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 px-8 md:px-16 pb-32 max-w-7xl mx-auto">
+        {/* Gallery Grid - wide gaps between cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-12 md:px-20 lg:px-28 pb-32 max-w-[1400px] mx-auto">
           {filteredPrompts.map((prompt, index) => (
             <div 
               key={prompt.id}

@@ -50,7 +50,7 @@ export default function PromptsPage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="pt-24 pb-16 px-6 md:pt-32 md:pb-20">
+        <section className="pt-24 pb-16 px-6 md:pt-32 md:pb-20 bg-green-50" style={{ border: '4px solid blue' }}>
           <div className="max-w-2xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-text-primary mb-8">
               Prompts that actually work
@@ -102,8 +102,11 @@ export default function PromptsPage() {
           </div>
         )}
 
-        {/* Gallery Grid - wide gaps between cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-12 md:px-20 lg:px-28 pb-32 max-w-[1400px] mx-auto">
+        {/* Gallery Grid - HUGE gaps between cards - DEBUG: red border to prove this code is deployed */}
+        <div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 px-16 md:px-24 lg:px-32 pb-40 max-w-[1400px] mx-auto"
+          style={{ border: '4px solid red', padding: '48px' }}
+        >
           {filteredPrompts.map((prompt, index) => (
             <div 
               key={prompt.id}

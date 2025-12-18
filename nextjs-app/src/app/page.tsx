@@ -50,7 +50,7 @@ export default function PromptsPage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="pt-24 pb-16 px-6 md:pt-32 md:pb-20 bg-green-50" style={{ border: '4px solid blue' }}>
+        <section className="pt-32 pb-24 px-8 md:pt-48 md:pb-32">
           <div className="max-w-2xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-text-primary mb-8">
               Prompts that actually work
@@ -77,7 +77,7 @@ export default function PromptsPage() {
         </section>
 
         {/* Filters - with significant spacing from search */}
-        <nav className="flex justify-center flex-wrap gap-3 px-6 pt-16 pb-20">
+        <nav className="flex justify-center flex-wrap gap-4 px-8 pt-20 pb-24">
           {categories.map(cat => (
             <button
               key={cat.value}
@@ -102,11 +102,8 @@ export default function PromptsPage() {
           </div>
         )}
 
-        {/* Gallery Grid - HUGE gaps between cards - DEBUG: red border to prove this code is deployed */}
-        <div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 px-16 md:px-24 lg:px-32 pb-40 max-w-[1400px] mx-auto"
-          style={{ border: '4px solid red', padding: '48px' }}
-        >
+        {/* Gallery Grid - HUGE gaps between cards for breathing room */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16 lg:gap-20 px-8 md:px-16 lg:px-24 pb-32 max-w-[1600px] mx-auto">
           {filteredPrompts.map((prompt, index) => (
             <div 
               key={prompt.id}

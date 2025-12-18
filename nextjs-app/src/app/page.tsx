@@ -50,17 +50,17 @@ export default function PromptsPage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="pt-20 pb-8 px-6 md:pt-24 md:pb-12">
+        <section className="pt-16 pb-12 px-6 md:pt-20 md:pb-16">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)] mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)] mb-6">
               Prompts that actually work
             </h1>
-            <p className="text-lg text-[var(--text-secondary)] mb-10">
+            <p className="text-lg text-[var(--text-secondary)] mb-12">
               Curated collection of battle-tested prompts. Click to copy, paste to use.
             </p>
             
             {/* Search Bar */}
-            <div className="relative max-w-md mx-auto">
+            <div className="relative max-w-md mx-auto mb-16">
               <Search 
                 size={20} 
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" 
@@ -70,14 +70,14 @@ export default function PromptsPage() {
                 placeholder="Search prompts..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)] transition-colors"
+                className="w-full pl-12 pr-4 py-4 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)] transition-colors"
               />
             </div>
           </div>
         </section>
 
         {/* Filters */}
-        <nav className="flex justify-center flex-wrap gap-3 px-6 pt-4 pb-12">
+        <nav className="flex justify-center flex-wrap gap-3 px-6 pb-16">
           {categories.map(cat => (
             <button
               key={cat.value}
@@ -103,7 +103,7 @@ export default function PromptsPage() {
         )}
 
         {/* Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-6 md:px-8 pb-24 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-8 md:px-12 lg:px-16 pb-32 max-w-7xl mx-auto">
           {filteredPrompts.map((prompt, index) => (
             <div 
               key={prompt.id}

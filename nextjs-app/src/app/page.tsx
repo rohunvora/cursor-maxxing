@@ -60,7 +60,7 @@ export default function PromptsPage() {
             </p>
             
             {/* Search Bar */}
-            <div className="relative max-w-md mx-auto mb-16">
+            <div className="relative max-w-md mx-auto" style={{ marginBottom: '80px' }}>
               <Search 
                 size={20} 
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" 
@@ -103,7 +103,10 @@ export default function PromptsPage() {
         )}
 
         {/* Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-8 md:px-12 lg:px-16 pb-32 max-w-7xl mx-auto">
+        <div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto"
+          style={{ gap: '48px', padding: '0 64px 128px 64px' }}
+        >
           {filteredPrompts.map((prompt, index) => (
             <div 
               key={prompt.id}

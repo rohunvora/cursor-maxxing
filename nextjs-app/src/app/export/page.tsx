@@ -15,10 +15,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  Copy,
   Lock,
-  Eye,
-  EyeOff,
   Download,
   Loader2,
   CheckCircle,
@@ -44,7 +41,6 @@ export default function ExportPage() {
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [uploadMessage, setUploadMessage] = useState('')
   
-  // Form data for step 5
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -66,11 +62,9 @@ export default function ExportPage() {
     { num: 5, label: 'Export', icon: Send },
   ]
 
-  // Parse different conversation formats
   const parseConversation = useCallback((text: string): Message[] => {
     const messages: Message[] = []
     
-    // Try JSON first
     try {
       const json = JSON.parse(text)
       if (Array.isArray(json)) {
@@ -90,7 +84,6 @@ export default function ExportPage() {
       // Not JSON, try plain text
     }
 
-    // Parse plain text
     const lines = text.split('\n')
     let currentRole: 'user' | 'assistant' | null = null
     let currentContent: string[] = []
@@ -234,7 +227,6 @@ export default function ExportPage() {
   const handleSubmit = async () => {
     setIsSubmitting(true)
     
-    // Check if user is authenticated
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
@@ -243,7 +235,6 @@ export default function ExportPage() {
       return
     }
 
-    // Apply redactions to messages
     const selectedMessages = conversation.messages
       .filter((_, i) => conversation.selected.has(i))
       .map((msg, i) => {
@@ -256,7 +247,6 @@ export default function ExportPage() {
         return { role: msg.role, content }
       })
 
-    // In production: Upload to Supabase
     const exportData = {
       meta: {
         title: formData.title,
@@ -274,7 +264,6 @@ export default function ExportPage() {
       messages: selectedMessages
     }
 
-    // For now, download as JSON
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -311,32 +300,32 @@ export default function ExportPage() {
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="max-w-4xl mx-auto px-8 py-8">
+      <main className="flex-1 max-w-3xl mx-auto px-6 py-8 w-full">
         {/* Progress Bar */}
         <div className="flex items-center justify-center mb-12">
           {steps.map((step, i) => (
             <div key={step.num} className="flex items-center">
               <div className="flex flex-col items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all ${
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all border ${
                   currentStep === step.num
-                    ? 'bg-[var(--accent-primary)] text-black'
+                    ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]'
                     : currentStep > step.num
-                    ? 'bg-[var(--success)] text-black'
-                    : 'bg-[var(--bg-card)] border-2 border-[var(--border-subtle)] text-[var(--text-muted)]'
+                    ? 'bg-[var(--success)] text-white border-[var(--success)]'
+                    : 'bg-[var(--bg-card)] border-[var(--border-subtle)] text-[var(--text-muted)]'
                 }`}>
                   {currentStep > step.num ? <Check size={18} /> : step.num}
                 </div>
                 <span className={`text-xs mt-2 ${
-                  currentStep === step.num ? 'text-[var(--accent-primary)]' : 'text-[var(--text-muted)]'
+                  currentStep === step.num ? 'text-[var(--accent-primary)] font-medium' : 'text-[var(--text-muted)]'
                 }`}>
                   {step.label}
                 </span>
               </div>
               {i < steps.length - 1 && (
-                <div className={`w-16 h-0.5 mx-2 mb-6 ${
+                <div className={`w-12 md:w-16 h-0.5 mx-2 mb-6 ${
                   currentStep > step.num ? 'bg-[var(--success)]' : 'bg-[var(--border-subtle)]'
                 }`} />
               )}
@@ -348,54 +337,56 @@ export default function ExportPage() {
         {currentStep === 1 && (
           <div className="animate-fadeIn">
             <div className="text-center mb-8">
-              <span className="text-5xl mb-4 block">🔒</span>
-              <h1 className="text-2xl font-bold mb-2">Your Privacy Comes First</h1>
+              <div className="w-16 h-16 rounded-full bg-[var(--accent-light)] flex items-center justify-center mx-auto mb-4">
+                <Lock className="w-8 h-8 text-[var(--accent-primary)]" />
+              </div>
+              <h1 className="text-2xl font-bold mb-2 text-[var(--text-primary)]">Your Privacy Comes First</h1>
               <p className="text-[var(--text-secondary)]">Before we start, here&apos;s exactly what happens with your data.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6 text-center">
-                <span className="text-3xl mb-3 block">💻</span>
-                <h3 className="font-semibold mb-2">100% Client-Side</h3>
+              <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[16px] p-5 text-center">
+                <div className="text-2xl mb-3">💻</div>
+                <h3 className="font-semibold mb-2 text-[var(--text-primary)]">100% Client-Side</h3>
                 <p className="text-sm text-[var(--text-secondary)]">Your chat history is processed entirely in your browser.</p>
               </div>
-              <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6 text-center">
-                <span className="text-3xl mb-3 block">👁️</span>
-                <h3 className="font-semibold mb-2">Preview Before Sharing</h3>
+              <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[16px] p-5 text-center">
+                <div className="text-2xl mb-3">👁️</div>
+                <h3 className="font-semibold mb-2 text-[var(--text-primary)]">Preview Before Sharing</h3>
                 <p className="text-sm text-[var(--text-secondary)]">See exactly what will be shared and redact anything.</p>
               </div>
-              <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6 text-center">
-                <span className="text-3xl mb-3 block">🗑️</span>
-                <h3 className="font-semibold mb-2">Nothing Stored</h3>
+              <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[16px] p-5 text-center">
+                <div className="text-2xl mb-3">🗑️</div>
+                <h3 className="font-semibold mb-2 text-[var(--text-primary)]">Nothing Stored</h3>
                 <p className="text-sm text-[var(--text-secondary)]">Close this tab and everything is gone.</p>
               </div>
             </div>
 
-            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6 mb-8">
-              <h3 className="text-sm font-medium text-[var(--text-secondary)] uppercase tracking-wide mb-3">What we access:</h3>
+            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[16px] p-6 mb-8">
+              <h3 className="text-sm font-medium text-[var(--text-muted)] uppercase tracking-wide mb-3">What we access:</h3>
               <ul className="space-y-2 mb-6">
-                <li className="flex items-center gap-3 text-sm">
-                  <CheckCircle size={18} className="text-[var(--success)]" />
+                <li className="flex items-center gap-3 text-sm text-[var(--text-primary)]">
+                  <CheckCircle size={18} className="text-[var(--success)] flex-shrink-0" />
                   Your Cursor conversation history (the file you provide)
                 </li>
-                <li className="flex items-center gap-3 text-sm">
-                  <CheckCircle size={18} className="text-[var(--success)]" />
+                <li className="flex items-center gap-3 text-sm text-[var(--text-primary)]">
+                  <CheckCircle size={18} className="text-[var(--success)] flex-shrink-0" />
                   Message timestamps and content
                 </li>
               </ul>
               
-              <h3 className="text-sm font-medium text-[var(--text-secondary)] uppercase tracking-wide mb-3">What we NEVER access:</h3>
+              <h3 className="text-sm font-medium text-[var(--text-muted)] uppercase tracking-wide mb-3">What we NEVER access:</h3>
               <ul className="space-y-2">
-                <li className="flex items-center gap-3 text-sm">
-                  <XCircle size={18} className="text-[var(--accent-primary)]" />
+                <li className="flex items-center gap-3 text-sm text-[var(--text-primary)]">
+                  <XCircle size={18} className="text-[var(--error)] flex-shrink-0" />
                   Your file system or other applications
                 </li>
-                <li className="flex items-center gap-3 text-sm">
-                  <XCircle size={18} className="text-[var(--accent-primary)]" />
+                <li className="flex items-center gap-3 text-sm text-[var(--text-primary)]">
+                  <XCircle size={18} className="text-[var(--error)] flex-shrink-0" />
                   API keys, passwords, or credentials
                 </li>
-                <li className="flex items-center gap-3 text-sm">
-                  <XCircle size={18} className="text-[var(--accent-primary)]" />
+                <li className="flex items-center gap-3 text-sm text-[var(--text-primary)]">
+                  <XCircle size={18} className="text-[var(--error)] flex-shrink-0" />
                   Anything you don&apos;t explicitly select
                 </li>
               </ul>
@@ -407,8 +398,10 @@ export default function ExportPage() {
         {currentStep === 2 && (
           <div className="animate-fadeIn">
             <div className="text-center mb-8">
-              <span className="text-5xl mb-4 block">📁</span>
-              <h1 className="text-2xl font-bold mb-2">Upload Your Chat History</h1>
+              <div className="w-16 h-16 rounded-full bg-[var(--accent-light)] flex items-center justify-center mx-auto mb-4">
+                <Upload className="w-8 h-8 text-[var(--accent-primary)]" />
+              </div>
+              <h1 className="text-2xl font-bold mb-2 text-[var(--text-primary)]">Upload Your Chat History</h1>
               <p className="text-[var(--text-secondary)]">Choose how you want to provide your Cursor conversation.</p>
             </div>
 
@@ -422,7 +415,7 @@ export default function ExportPage() {
                 e.currentTarget.classList.remove('border-[var(--accent-primary)]')
                 if (e.dataTransfer.files[0]) handleFileUpload(e.dataTransfer.files[0])
               }}
-              className="border-2 border-dashed border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-12 text-center cursor-pointer bg-[var(--bg-card)] hover:border-[var(--accent-primary)] transition-colors mb-6"
+              className="border-2 border-dashed border-[var(--border-subtle)] rounded-[16px] p-12 text-center cursor-pointer bg-[var(--bg-card)] hover:border-[var(--accent-primary)] transition-colors mb-6"
             >
               <input 
                 ref={fileInputRef}
@@ -431,11 +424,11 @@ export default function ExportPage() {
                 className="hidden"
                 onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])}
               />
-              <Upload size={48} className="mx-auto mb-4 text-[var(--text-muted)]" />
-              <h3 className="text-lg font-medium mb-2">Drop your file here</h3>
+              <Upload size={40} className="mx-auto mb-4 text-[var(--text-muted)]" />
+              <h3 className="text-lg font-medium mb-2 text-[var(--text-primary)]">Drop your file here</h3>
               <p className="text-sm text-[var(--text-muted)]">or click to browse • JSON or TXT</p>
               {uploadStatus !== 'idle' && (
-                <p className={`mt-4 text-sm ${uploadStatus === 'success' ? 'text-[var(--success)]' : 'text-red-400'}`}>
+                <p className={`mt-4 text-sm ${uploadStatus === 'success' ? 'text-[var(--success)]' : 'text-[var(--error)]'}`}>
                   {uploadMessage}
                 </p>
               )}
@@ -448,7 +441,7 @@ export default function ExportPage() {
               <div className="flex-1 h-px bg-[var(--border-subtle)]" />
             </div>
 
-            <h3 className="font-medium mb-3">Paste your conversation</h3>
+            <h3 className="font-medium mb-3 text-[var(--text-primary)]">Paste your conversation</h3>
             <textarea
               value={pasteContent}
               onChange={(e) => { setPasteContent(e.target.value); if (e.target.value.length > 50) handlePaste() }}
@@ -462,21 +455,23 @@ export default function ExportPage() {
         {currentStep === 3 && (
           <div className="animate-fadeIn">
             <div className="text-center mb-8">
-              <span className="text-5xl mb-4 block">💬</span>
-              <h1 className="text-2xl font-bold mb-2">Select Messages</h1>
+              <div className="w-16 h-16 rounded-full bg-[var(--accent-light)] flex items-center justify-center mx-auto mb-4">
+                <MessageSquare className="w-8 h-8 text-[var(--accent-primary)]" />
+              </div>
+              <h1 className="text-2xl font-bold mb-2 text-[var(--text-primary)]">Select Messages</h1>
               <p className="text-[var(--text-secondary)]">Choose which messages to include in your showcase.</p>
             </div>
 
-            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] overflow-hidden">
+            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[16px] overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 bg-[var(--bg-secondary)] border-b border-[var(--border-subtle)]">
                 <span className="text-sm text-[var(--text-secondary)]">
                   <span className="text-[var(--accent-primary)] font-semibold">{conversation.selected.size}</span> of {conversation.messages.length} selected
                 </span>
                 <div className="flex gap-2">
-                  <button onClick={selectAll} className="px-3 py-1.5 text-xs bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded hover:border-[var(--border-medium)] transition-colors">
+                  <button onClick={selectAll} className="px-3 py-1.5 text-xs bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] hover:border-[var(--border-medium)] transition-colors text-[var(--text-primary)]">
                     Select All
                   </button>
-                  <button onClick={deselectAll} className="px-3 py-1.5 text-xs bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded hover:border-[var(--border-medium)] transition-colors">
+                  <button onClick={deselectAll} className="px-3 py-1.5 text-xs bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] hover:border-[var(--border-medium)] transition-colors text-[var(--text-primary)]">
                     Deselect All
                   </button>
                 </div>
@@ -487,8 +482,8 @@ export default function ExportPage() {
                   <div 
                     key={i}
                     onClick={() => toggleMessageSelection(i)}
-                    className={`flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-[var(--bg-secondary)] transition-colors ${
-                      conversation.selected.has(i) ? 'bg-[var(--accent-glow)]' : ''
+                    className={`flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-[var(--bg-secondary)] transition-colors border-b border-[var(--border-subtle)] last:border-b-0 ${
+                      conversation.selected.has(i) ? 'bg-[var(--accent-light)]' : ''
                     }`}
                   >
                     <input 
@@ -518,16 +513,18 @@ export default function ExportPage() {
         {currentStep === 4 && (
           <div className="animate-fadeIn">
             <div className="text-center mb-8">
-              <span className="text-5xl mb-4 block">🔍</span>
-              <h1 className="text-2xl font-bold mb-2">Review & Redact</h1>
+              <div className="w-16 h-16 rounded-full bg-[var(--accent-light)] flex items-center justify-center mx-auto mb-4">
+                <Search className="w-8 h-8 text-[var(--accent-primary)]" />
+              </div>
+              <h1 className="text-2xl font-bold mb-2 text-[var(--text-primary)]">Review & Redact</h1>
               <p className="text-[var(--text-secondary)]">Scan for sensitive info and redact anything you don&apos;t want shared.</p>
             </div>
 
-            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6 mb-6">
-              <h3 className="font-medium mb-3">🤖 Auto-detect sensitive info</h3>
+            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[16px] p-5 mb-6">
+              <h3 className="font-medium mb-3 text-[var(--text-primary)]">🤖 Auto-detect sensitive info</h3>
               <p className="text-sm text-[var(--text-secondary)] mb-4">We&apos;ll scan for API keys, emails, and file paths.</p>
               <div className="flex gap-3">
-                <button onClick={autoRedact} className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] text-sm hover:border-[var(--accent-primary)] transition-colors">
+                <button onClick={autoRedact} className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] text-sm hover:border-[var(--accent-primary)] transition-colors text-[var(--text-primary)]">
                   <Search size={16} />
                   Scan for Sensitive Data
                 </button>
@@ -537,11 +534,11 @@ export default function ExportPage() {
               </div>
             </div>
 
-            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] max-h-[400px] overflow-y-auto p-4">
+            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[16px] max-h-[400px] overflow-y-auto p-4">
               {conversation.messages.filter((_, i) => conversation.selected.has(i)).map((msg, i) => (
-                <div key={i} className={`p-4 rounded-[var(--radius-md)] mb-3 ${
+                <div key={i} className={`p-4 rounded-[var(--radius-md)] mb-3 last:mb-0 ${
                   msg.role === 'user' 
-                    ? 'bg-[var(--bg-primary)] border-l-[3px] border-[var(--accent-primary)]'
+                    ? 'bg-[var(--accent-light)] border-l-[3px] border-[var(--accent-primary)]'
                     : 'bg-[var(--bg-secondary)]'
                 }`}>
                   <span className={`text-[0.65rem] font-semibold uppercase ${
@@ -568,42 +565,44 @@ export default function ExportPage() {
         {currentStep === 5 && (
           <div className="animate-fadeIn">
             <div className="text-center mb-8">
-              <span className="text-5xl mb-4 block">🚀</span>
-              <h1 className="text-2xl font-bold mb-2">Export Your Showcase</h1>
+              <div className="w-16 h-16 rounded-full bg-[var(--accent-light)] flex items-center justify-center mx-auto mb-4">
+                <Send className="w-8 h-8 text-[var(--accent-primary)]" />
+              </div>
+              <h1 className="text-2xl font-bold mb-2 text-[var(--text-primary)]">Export Your Showcase</h1>
               <p className="text-[var(--text-secondary)]">Add details and you&apos;re ready to share!</p>
             </div>
 
-            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6 mb-6">
+            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[16px] p-5 mb-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">Showcase Title *</label>
+                  <label className="block text-sm font-medium mb-1.5 text-[var(--text-primary)]">Showcase Title *</label>
                   <input
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     placeholder="e.g., Building a SaaS Dashboard from Scratch"
-                    className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] focus:outline-none focus:border-[var(--accent-primary)]"
+                    className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] focus:outline-none focus:border-[var(--accent-primary)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)]"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">Description *</label>
+                  <label className="block text-sm font-medium mb-1.5 text-[var(--text-primary)]">Description *</label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="What did you build? What makes this conversation valuable?"
                     rows={3}
-                    className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] focus:outline-none focus:border-[var(--accent-primary)] resize-none"
+                    className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] focus:outline-none focus:border-[var(--accent-primary)] resize-none text-[var(--text-primary)] placeholder:text-[var(--text-muted)]"
                   />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">Category</label>
+                    <label className="block text-sm font-medium mb-1.5 text-[var(--text-primary)]">Category</label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] focus:outline-none focus:border-[var(--accent-primary)]"
+                      className="w-full px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] focus:outline-none focus:border-[var(--accent-primary)] text-[var(--text-primary)]"
                     >
                       <option value="web">Web App</option>
                       <option value="automation">Automation</option>
@@ -612,9 +611,9 @@ export default function ExportPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">Your Price</label>
+                    <label className="block text-sm font-medium mb-1.5 text-[var(--text-primary)]">Your Price</label>
                     <div className="flex">
-                      <span className="px-4 py-3 bg-[var(--bg-secondary)] border border-r-0 border-[var(--border-subtle)] rounded-l-[var(--radius-md)] text-[var(--text-muted)]">$</span>
+                      <span className="px-4 py-3 bg-[var(--bg-card)] border border-r-0 border-[var(--border-subtle)] rounded-l-[var(--radius-md)] text-[var(--text-muted)]">$</span>
                       <input
                         type="number"
                         value={formData.price}
@@ -622,7 +621,7 @@ export default function ExportPage() {
                         min="0"
                         max="99.99"
                         step="0.01"
-                        className="flex-1 px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-r-[var(--radius-md)] focus:outline-none focus:border-[var(--accent-primary)]"
+                        className="flex-1 px-4 py-3 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-r-[var(--radius-md)] focus:outline-none focus:border-[var(--accent-primary)] text-[var(--text-primary)]"
                       />
                     </div>
                   </div>
@@ -630,8 +629,8 @@ export default function ExportPage() {
               </div>
             </div>
 
-            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6 mb-6">
-              <h3 className="font-medium mb-4">📊 Export Summary</h3>
+            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[16px] p-5 mb-6">
+              <h3 className="font-medium mb-4 text-[var(--text-primary)]">📊 Export Summary</h3>
               <div className="flex gap-8">
                 <div>
                   <div className="text-2xl font-bold text-[var(--accent-primary)]">{conversation.selected.size}</div>
@@ -652,13 +651,13 @@ export default function ExportPage() {
               </div>
             </div>
 
-            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6">
-              <h3 className="font-medium mb-4">Export As:</h3>
+            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[16px] p-5">
+              <h3 className="font-medium mb-4 text-[var(--text-primary)]">Export As:</h3>
               <div className="flex gap-4">
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting || !canProceed()}
-                  className="flex-1 flex flex-col items-center gap-2 py-6 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] hover:border-[var(--border-medium)] transition-all disabled:opacity-50"
+                  className="flex-1 flex flex-col items-center gap-2 py-5 bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] hover:border-[var(--border-medium)] transition-all disabled:opacity-50 text-[var(--text-primary)]"
                 >
                   <Download size={24} />
                   <span className="font-medium">Download JSON</span>
@@ -667,11 +666,11 @@ export default function ExportPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting || !canProceed()}
-                  className="flex-1 flex flex-col items-center gap-2 py-6 bg-[var(--accent-primary)] rounded-[var(--radius-md)] text-black hover:bg-[var(--accent-secondary)] transition-all disabled:opacity-50"
+                  className="flex-1 flex flex-col items-center gap-2 py-5 bg-[var(--accent-primary)] rounded-[var(--radius-md)] text-white hover:bg-[var(--accent-secondary)] transition-all disabled:opacity-50"
                 >
                   {isSubmitting ? <Loader2 size={24} className="animate-spin" /> : <Send size={24} />}
                   <span className="font-medium">Submit to Gallery</span>
-                  <span className="text-xs opacity-60">Coming soon</span>
+                  <span className="text-xs opacity-70">Coming soon</span>
                 </button>
               </div>
             </div>
@@ -683,7 +682,7 @@ export default function ExportPage() {
           <button
             onClick={prevStep}
             disabled={currentStep === 1}
-            className="flex items-center gap-2 px-6 py-3 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] text-[var(--text-secondary)] hover:border-[var(--border-medium)] hover:text-[var(--text-primary)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] text-[var(--text-secondary)] hover:border-[var(--border-medium)] hover:text-[var(--text-primary)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ArrowLeft size={18} />
             Back
@@ -693,7 +692,7 @@ export default function ExportPage() {
             <button
               onClick={nextStep}
               disabled={!canProceed()}
-              className="flex items-center gap-2 px-6 py-3 bg-[var(--accent-primary)] rounded-[var(--radius-md)] text-black font-semibold hover:bg-[var(--accent-secondary)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-5 py-2.5 bg-[var(--accent-primary)] rounded-[var(--radius-md)] text-white font-medium hover:bg-[var(--accent-secondary)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Continue
               <ArrowRight size={18} />
@@ -703,7 +702,6 @@ export default function ExportPage() {
       </main>
 
       <Footer />
-    </>
+    </div>
   )
 }
-

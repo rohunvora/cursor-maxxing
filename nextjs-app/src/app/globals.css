@@ -1,54 +1,52 @@
 /**
  * GLOBAL STYLES - prompt.gallery
  * 
- * ⚠️  IMPORTANT FOR REDESIGN:
- * This file uses Tailwind CSS v4 with CSS custom properties.
- * 
- * RECOMMENDED APPROACH for new styling:
- * 1. Define colors in the @theme block (Tailwind v4's way)
- * 2. Use standard Tailwind classes: bg-bg-card, text-text-primary, etc.
- * 3. AVOID arbitrary value syntax like bg-[var(--color)] - it's inconsistent in v4
- * 
- * ALTERNATIVE: If you prefer, you can downgrade to Tailwind v3 which has
- * more stable arbitrary value support. Just change package.json.
+ * Light mode redesign inspired by Kinsta dashboard aesthetic.
+ * Clean, professional with thin borders for depth (no shadows).
  */
 
 @import "tailwindcss";
 
 /* =============================================================================
-   CSS CUSTOM PROPERTIES
-   These define the design tokens. Update these to change the color scheme.
+   CSS CUSTOM PROPERTIES - LIGHT MODE
    ============================================================================= */
 
 :root {
   /* Backgrounds */
-  --bg-primary: #0a0a0b;
-  --bg-secondary: #111113;
-  --bg-card: #161618;
-  --bg-card-hover: #1a1a1d;
+  --bg-primary: #FAFAFA;
+  --bg-secondary: #F5F5F5;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FAFAFA;
+  --bg-code: #F5F5F5;
   
-  /* Borders */
-  --border-subtle: #232326;
-  --border-medium: #2a2a2e;
+  /* Borders - thin, dark for depth */
+  --border-subtle: #E5E5E5;
+  --border-medium: #D4D4D4;
+  --border-strong: #A3A3A3;
   
   /* Text */
-  --text-primary: #f4f4f5;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  --text-primary: #171717;
+  --text-secondary: #525252;
+  --text-muted: #A3A3A3;
   
-  /* Accent (Orange) */
-  --accent-primary: #f97316;
-  --accent-secondary: #fb923c;
-  --accent-glow: rgba(249, 115, 22, 0.15);
+  /* Accent (Green - Kinsta-inspired) */
+  --accent-primary: #16A34A;
+  --accent-secondary: #22C55E;
+  --accent-light: #DCFCE7;
+  --accent-glow: rgba(22, 163, 74, 0.1);
   
-  /* Success (Green) */
-  --success: #22c55e;
-  --success-glow: rgba(34, 197, 94, 0.2);
+  /* Success */
+  --success: #16A34A;
+  --success-light: #DCFCE7;
+  
+  /* Warning/Error */
+  --warning: #F59E0B;
+  --error: #EF4444;
   
   /* Spacing & Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -57,11 +55,6 @@
 
 /* =============================================================================
    TAILWIND v4 THEME CONFIGURATION
-   
-   This exposes CSS variables to Tailwind so you can use them as utilities.
-   Example: bg-bg-card, text-text-primary, border-border-subtle
-   
-   The --color-* prefix is required by Tailwind v4.
    ============================================================================= */
 
 @theme inline {
@@ -69,33 +62,35 @@
   --color-background: var(--bg-primary);
   --color-foreground: var(--text-primary);
   
-  /* Fonts - loaded via Google Fonts in layout.tsx */
+  /* Fonts */
   --font-sans: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
   
-  /* 
-   * Custom colors - use these with Tailwind utilities
-   * bg-bg-card, text-text-primary, border-border-subtle, etc.
-   */
-  --color-bg-primary: #0a0a0b;
-  --color-bg-secondary: #111113;
-  --color-bg-card: #161618;
-  --color-bg-card-hover: #1a1a1d;
-  --color-border-subtle: #232326;
-  --color-border-medium: #2a2a2e;
-  --color-text-primary: #f4f4f5;
-  --color-text-secondary: #a1a1aa;
-  --color-text-muted: #71717a;
-  --color-accent-primary: #f97316;
-  --color-accent-secondary: #fb923c;
-  --color-accent-glow: rgba(249, 115, 22, 0.15);
-  --color-success: #22c55e;
-  --color-success-glow: rgba(34, 197, 94, 0.2);
+  /* Custom colors for Tailwind utilities */
+  --color-bg-primary: #FAFAFA;
+  --color-bg-secondary: #F5F5F5;
+  --color-bg-card: #FFFFFF;
+  --color-bg-card-hover: #FAFAFA;
+  --color-bg-code: #F5F5F5;
+  --color-border-subtle: #E5E5E5;
+  --color-border-medium: #D4D4D4;
+  --color-border-strong: #A3A3A3;
+  --color-text-primary: #171717;
+  --color-text-secondary: #525252;
+  --color-text-muted: #A3A3A3;
+  --color-accent-primary: #16A34A;
+  --color-accent-secondary: #22C55E;
+  --color-accent-light: #DCFCE7;
+  --color-accent-glow: rgba(22, 163, 74, 0.1);
+  --color-success: #16A34A;
+  --color-success-light: #DCFCE7;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
   
   /* Border radius tokens */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
 }
 
 /* =============================================================================
@@ -123,26 +118,12 @@ body {
 }
 
 /* =============================================================================
-   VISUAL EFFECTS
+   TEXT SELECTION
    ============================================================================= */
 
-/* Noise texture overlay - adds subtle grain */
-.noise {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0.03;
-  z-index: 1000;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-}
-
-/* Text selection */
 ::selection {
   background: var(--accent-primary);
-  color: var(--bg-primary);
+  color: white;
 }
 
 /* =============================================================================
@@ -150,20 +131,20 @@ body {
    ============================================================================= */
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--border-medium);
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--border-strong);
 }
 
 /* =============================================================================
@@ -173,7 +154,7 @@ body {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -181,14 +162,31 @@ body {
   }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
-  50% { box-shadow: 0 0 30px var(--accent-glow), 0 0 40px var(--accent-glow); }
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.4s ease forwards;
+  animation: fadeIn 0.3s ease forwards;
 }
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease forwards;
+}
+
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
 
 /* =============================================================================
    FORM ELEMENTS
@@ -196,11 +194,18 @@ body {
 
 input, select, textarea {
   font-family: inherit;
+  font-size: inherit;
 }
 
 button {
   font-family: inherit;
   cursor: pointer;
+}
+
+/* Focus ring */
+input:focus, select:focus, textarea:focus, button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-light), 0 0 0 4px var(--accent-primary);
 }
 
 /* =============================================================================
@@ -218,16 +223,8 @@ a:hover {
 }
 
 /* =============================================================================
-   UTILITY CLASSES FOR EXISTING COMPONENTS
-   
-   ⚠️  LEGACY SUPPORT: These exist because the current components use
-   Tailwind's arbitrary value syntax (e.g., bg-[var(--bg-card)]) which
-   doesn't compile reliably in Tailwind v4.
-   
-   FOR REDESIGN: Use the @theme colors instead:
-   - bg-bg-card instead of bg-[var(--bg-card)]
-   - text-text-primary instead of text-[var(--text-primary)]
-   - border-border-subtle instead of border-[var(--border-subtle)]
+   UTILITY CLASSES - LEGACY SUPPORT
+   These exist for backwards compatibility with existing component code.
    ============================================================================= */
 
 .bg-\[var\(--bg-card\)\] { background-color: var(--bg-card); }
@@ -235,10 +232,12 @@ a:hover {
 .bg-\[var\(--bg-primary\)\] { background-color: var(--bg-primary); }
 .bg-\[var\(--bg-secondary\)\] { background-color: var(--bg-secondary); }
 .bg-\[var\(--accent-glow\)\] { background-color: var(--accent-glow); }
-.bg-\[var\(--success-glow\)\] { background-color: var(--success-glow); }
+.bg-\[var\(--accent-light\)\] { background-color: var(--accent-light); }
+.bg-\[var\(--success-light\)\] { background-color: var(--success-light); }
 
 .border-\[var\(--border-subtle\)\] { border-color: var(--border-subtle); }
 .border-\[var\(--border-medium\)\] { border-color: var(--border-medium); }
+.border-\[var\(--border-strong\)\] { border-color: var(--border-strong); }
 .border-\[var\(--accent-primary\)\] { border-color: var(--accent-primary); }
 .border-\[var\(--success\)\] { border-color: var(--success); }
 
@@ -253,7 +252,97 @@ a:hover {
 .rounded-\[var\(--radius-md\)\] { border-radius: var(--radius-md); }
 .rounded-\[var\(--radius-lg\)\] { border-radius: var(--radius-lg); }
 
-.shadow-\[0_0_0_3px_var\(--accent-glow\)\] { box-shadow: 0 0 0 3px var(--accent-glow); }
-.shadow-\[0_10px_40px_rgba\(0\,0\,0\,0\.4\)\] { box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
-.shadow-\[0_20px_40px_rgba\(0\,0\,0\,0\.3\)\] { box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-.shadow-\[0_0_0_1px_var\(--accent-glow\)\] { box-shadow: 0 0 0 1px var(--accent-glow); }
+/* =============================================================================
+   COMPONENT CLASSES
+   ============================================================================= */
+
+/* Card base style */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.card:hover {
+  border-color: var(--border-medium);
+}
+
+/* Button variants */
+.btn-primary {
+  background: var(--accent-primary);
+  color: white;
+  font-weight: 500;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: none;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background: var(--accent-secondary);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-weight: 500;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+/* Filter pill */
+.filter-pill {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.filter-pill:hover {
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+.filter-pill.active {
+  background: var(--text-primary);
+  color: var(--bg-card);
+  border-color: var(--text-primary);
+}
+
+/* Badge */
+.badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--accent-light);
+  color: var(--accent-primary);
+}
+
+/* Code block */
+.code-block {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  overflow-x: auto;
+}

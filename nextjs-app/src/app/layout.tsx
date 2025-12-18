@@ -1,19 +1,7 @@
 /**
  * Root Layout - prompt.gallery
  * 
- * This is the main layout wrapper for the entire app.
- * 
- * FONTS:
- * - Instrument Sans: Primary font for UI text
- * - IBM Plex Mono: Monospace font for code/prompts
- * Both are loaded from Google Fonts.
- * 
- * VISUAL EFFECTS:
- * - .noise div creates a subtle grain texture overlay (defined in globals.css)
- * 
- * FOR REDESIGN:
- * - You can change fonts here or use next/font for better performance
- * - The noise effect can be removed or modified in globals.css
+ * Light mode design with clean typography.
  */
 
 import type { Metadata } from "next";
@@ -42,8 +30,6 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {/* Noise texture overlay - creates subtle grain effect */}
-        <div className="noise" />
         {children}
       </body>
     </html>

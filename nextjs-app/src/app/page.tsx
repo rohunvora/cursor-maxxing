@@ -1,20 +1,39 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { PromptCard } from '@/components/PromptCard'
 import { prompts } from '@/lib/prompts-data'
+import { Search } from 'lucide-react'
 
 type Category = 'all' | 'coding' | 'writing' | 'analysis' | 'creative' | 'system'
 
 export default function PromptsPage() {
   const [activeFilter, setActiveFilter] = useState<Category>('all')
+  const [searchQuery, setSearchQuery] = useState('')
   const [copiedToast, setCopiedToast] = useState(false)
 
-  const filteredPrompts = activeFilter === 'all' 
-    ? prompts 
-    : prompts.filter(p => p.category === activeFilter)
+  const filteredPrompts = useMemo(() => {
+    let filtered = prompts
+    
+    // Filter by category
+    if (activeFilter !== 'all') {
+      filtered = filtered.filter(p => p.category === activeFilter)
+    }
+    
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter(p => 
+        p.title.toLowerCase().includes(query) ||
+        p.description.toLowerCase().includes(query) ||
+        p.prompt.toLowerCase().includes(query)
+      )
+    }
+    
+    return filtered
+  }, [activeFilter, searchQuery])
 
   const categories: { value: Category; label: string }[] = [
     { value: 'all', label: 'All' },
@@ -26,27 +45,47 @@ export default function PromptsPage() {
   ]
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main>
-        {/* Hero */}
-        <div className="text-center px-8 pb-8">
-          <p className="text-lg text-[var(--text-secondary)]">
-            Curated prompts that actually work. Click to copy.
-          </p>
-        </div>
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="py-16 px-6">
+          <div className="max-w-2xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)] mb-4">
+              Prompts that actually work
+            </h1>
+            <p className="text-lg text-[var(--text-secondary)] mb-8">
+              Curated collection of battle-tested prompts. Click to copy, paste to use.
+            </p>
+            
+            {/* Search Bar */}
+            <div className="relative max-w-md mx-auto">
+              <Search 
+                size={20} 
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" 
+              />
+              <input
+                type="text"
+                placeholder="Search prompts..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)] transition-colors"
+              />
+            </div>
+          </div>
+        </section>
 
         {/* Filters */}
-        <nav className="flex justify-center flex-wrap gap-2 px-8 pb-10 sticky top-0 bg-gradient-to-b from-[var(--bg-primary)] from-60% to-transparent z-50">
+        <nav className="flex justify-center flex-wrap gap-2 px-6 pb-8">
           {categories.map(cat => (
             <button
               key={cat.value}
               onClick={() => setActiveFilter(cat.value)}
               className={`text-sm font-medium px-4 py-2 rounded-full border transition-all duration-150 ${
                 activeFilter === cat.value
-                  ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] border-[var(--text-primary)]'
-                  : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-[var(--border-medium)] hover:text-[var(--text-primary)]'
+                  ? 'bg-[var(--text-primary)] text-[var(--bg-card)] border-[var(--text-primary)]'
+                  : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-[var(--border-medium)] hover:text-[var(--text-primary)]'
               }`}
             >
               {cat.label}
@@ -54,11 +93,21 @@ export default function PromptsPage() {
           ))}
         </nav>
 
+        {/* Results count */}
+        {searchQuery && (
+          <div className="text-center pb-6">
+            <span className="text-sm text-[var(--text-muted)]">
+              {filteredPrompts.length} {filteredPrompts.length === 1 ? 'result' : 'results'} found
+            </span>
+          </div>
+        )}
+
         {/* Gallery Grid */}
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(400px,1fr))] gap-6 px-8 pb-16 max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6 pb-16 max-w-6xl mx-auto">
           {filteredPrompts.map((prompt, index) => (
             <div 
               key={prompt.id}
+              className="animate-fadeIn"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               <PromptCard
@@ -71,13 +120,26 @@ export default function PromptsPage() {
             </div>
           ))}
         </div>
+
+        {/* Empty state */}
+        {filteredPrompts.length === 0 && (
+          <div className="text-center py-16">
+            <p className="text-[var(--text-muted)]">No prompts found matching your search.</p>
+            <button 
+              onClick={() => { setSearchQuery(''); setActiveFilter('all'); }}
+              className="mt-4 text-[var(--accent-primary)] hover:text-[var(--accent-secondary)] transition-colors"
+            >
+              Clear filters
+            </button>
+          </div>
+        )}
       </main>
 
       <Footer />
 
       {/* Toast */}
       <div 
-        className={`fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 px-5 py-3.5 bg-[var(--bg-card)] border border-[var(--success)] rounded-[var(--radius-md)] text-sm font-medium shadow-[0_10px_40px_rgba(0,0,0,0.4)] transition-all duration-250 z-[1001] ${
+        className={`fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 px-5 py-3.5 bg-[var(--bg-card)] border border-[var(--success)] rounded-[var(--radius-md)] text-sm font-medium shadow-lg transition-all duration-250 z-[1001] ${
           copiedToast 
             ? 'translate-y-0 opacity-100 visible' 
             : 'translate-y-[100px] opacity-0 invisible'
@@ -88,6 +150,6 @@ export default function PromptsPage() {
         </svg>
         Copied to clipboard
       </div>
-    </>
+    </div>
   )
 }

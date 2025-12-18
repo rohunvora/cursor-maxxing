@@ -1,4 +1,0 @@
-{
-  "buildCommand": "cd nextjs-app && npm run build",
-  "installCommand": "cd nextjs-app && npm install"
-}

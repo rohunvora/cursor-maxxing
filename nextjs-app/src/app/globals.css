@@ -97,11 +97,9 @@
    BASE STYLES & RESETS
    ============================================================================= */
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* Note: Tailwind's preflight handles box-sizing and sensible resets.
+   We removed the universal margin/padding reset that was overriding 
+   Tailwind utilities due to CSS cascade layer precedence. */
 
 html {
   scroll-behavior: smooth;

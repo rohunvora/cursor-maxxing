@@ -21,11 +21,15 @@ prompt.gallery is a marketplace where creators can monetize their AI prompt hist
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router)
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS v4 (light mode, Kinsta-inspired design)
 - **Database:** Supabase (PostgreSQL)
 - **Auth:** Supabase Auth (Email, GitHub, Magic Links)
 - **Payments:** Stripe + Stripe Connect
 - **Hosting:** Vercel
+
+## Live Site
+
+**Production:** [https://prmpt-hstry.vercel.app](https://prmpt-hstry.vercel.app)
 
 ## Getting Started
 
@@ -135,9 +139,12 @@ Set these in your Vercel dashboard:
 - [x] Stripe Connect for payouts
 - [x] Row-level security in database
 - [x] Legal pages (Terms, Privacy)
+- [x] **Light mode redesign** - Clean, Kinsta-inspired aesthetic
+- [x] **Search functionality** on prompts page
+- [x] **Hero sections** with improved typography
 
 ### 🚧 Coming Soon
-- [ ] Search functionality
+- [ ] Mobile navigation hamburger menu
 - [ ] User ratings/reviews
 - [ ] Creator profiles
 - [ ] Bundle discounts

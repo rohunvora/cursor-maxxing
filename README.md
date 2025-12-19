@@ -12,6 +12,12 @@
 
 ---
 
+> **⚠️ Status: Unreviewed**
+> 
+> The new `cursorhabits/` CLI package was just built and I haven't had time to review how it actually works or test it properly. **Next step: fully try it out, rip it apart, and validate it works as expected.** Use at your own risk until this notice is removed.
+
+---
+
 ## The Problem
 
 You use Cursor daily. You've said things like this **dozens** of times:

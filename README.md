@@ -1,102 +1,136 @@
 <div align="center">
-  <img src="/.github/social-preview.png" alt="prmpt-hstry" width="800" />
-  <p><strong>A curated gallery of AI prompts that actually work, with one-click copy and filtering.</strong></p>
+  <h1>cursorhabits</h1>
+  <p><strong>Your chat history writes your rules.</strong></p>
+  <p>Extract patterns from your Cursor conversations and generate personalized .cursorrules automatically.</p>
+  
   <p>
-    <a href="https://prmpt-hstry.vercel.app"><strong>🚀 Live Demo</strong></a>
+    <a href="https://prmpt-hstry.vercel.app"><strong>🌐 Website</strong></a> ·
+    <a href="#quick-start"><strong>⚡ Quick Start</strong></a> ·
+    <a href="cursor-habits/"><strong>📁 CLI Tool</strong></a>
   </p>
 </div>
 
-# prompt.gallery
+---
 
-**A curated collection of AI prompts that actually work.** Browse proven prompts across coding, writing, analysis, and creative categories with one-click copy functionality. Think [reallygoodemails.com](https://reallygoodemails.com) but for AI prompts - no fluff, just prompts that deliver results tied to real finished products so you can learn what actually works.
+## The Problem
 
-## What it does
+You use Cursor daily. You've said things like this **dozens** of times:
 
-- **One-click copy** — Click any prompt card to instantly copy it to your clipboard
-- **Smart filtering** — Browse by category: Coding, Writing, Analysis, Creative, System prompts
-- **Keyboard shortcuts** — `Cmd/Ctrl + 1-9` to quickly copy the nth visible prompt
-- **Clean interface** — Dark UI optimized for daily AI users, with monospace formatting for prompts
-- **No BS** — Every prompt is tied to actual results, not theoretical examples
+> "Push to GitHub when you're done"  
+> "Don't test locally, deploy to Vercel"  
+> "Always check mobile"  
+> "Add that key to .env"
+
+But you never formalize these into rules because:
+- You can't remember them all in the moment
+- Writing rules from scratch feels arbitrary
+- You don't know what you *actually* repeat vs. what you *think* you repeat
+
+**Your chat history already knows.** This tool extracts it.
+
+---
 
 ## Quick Start
 
-The gallery runs as a static site - no installation needed:
-
 ```bash
-# Clone and serve locally
-git clone https://github.com/yourusername/prmpt-hstry.git
-cd prmpt-hstry
-python3 -m http.server 8080
+# Clone
+git clone https://github.com/rohunvora/prmpt-hstry.git
+cd prmpt-hstry/cursor-habits
 
-# Open http://localhost:8080
+# Run
+python cursor_habits.py
 ```
 
-Or just visit the live version at [prompt.gallery](https://prompt.gallery) (if deployed).
+That's it. No API keys, no accounts, no data uploaded anywhere.
 
-## Usage
+**Output:**
+```
+🔍 Scanning Cursor chat history...
+   Found 847 messages across 23 conversations
 
-1. **Browse prompts** by category or scroll through all
-2. **Click any card** to copy the prompt instantly  
-3. **Use keyboard shortcuts** `Cmd/Ctrl + 1-9` for rapid copying
-4. **Filter by clicking** category tags to focus on specific types
+✓ Detected 12 recurring patterns:
 
-## Adding Your Own Prompts
+→ "push to GitHub" appeared 127 times
+→ "deploy to Vercel" appeared 89 times
+→ "check mobile" appeared 56 times
+→ "add to .env" appeared 34 times
 
-Edit `index.html` and add a new prompt card:
+📄 Generated: suggested_rules.md
 
-```html
-<article class="prompt-card" data-category="coding">
-  <div class="prompt-content">
-    <p>Your prompt text here...</p>
-  </div>
-  <div class="prompt-meta">
-    <span class="category">coding</span>
-    <span class="description">Brief description of what this does</span>
-  </div>
-</article>
+Done! Copy these into your .cursorrules file.
 ```
 
-Available categories: `coding`, `writing`, `analysis`, `creative`, `system`
+---
 
-## Architecture
+## What You Get
 
-```mermaid
-flowchart LR
-    subgraph Static["📄 Static Files"]
-        HTML[index.html]
-        CSS[styles.css]
-        JS[script.js]
-    end
-    
-    subgraph UX["✨ User Flow"]
-        Browse[Browse]
-        Filter[Filter]
-        Copy[One-Click Copy]
-    end
-    
-    HTML --> Browse
-    CSS --> Browse
-    JS --> Filter
-    JS --> Copy
-    
-    style Static fill:#0c0a09,stroke:#78716c,color:#fff
-    style UX fill:#0c0a09,stroke:#fcd34d,color:#fff
+The tool generates a `suggested_rules.md` file with rules extracted from your actual habits:
+
+```markdown
+# Deployment Workflow
+
+## When This Applies
+- Any time you make code changes that should go live
+
+## GitHub Flow
+- Push to GitHub after EVERY meaningful change
+- Don't wait to be asked
+- Commit from the rohunvora account
+
+## Vercel Flow
+- Do NOT test locally
+- Push to Vercel and test on production URL
+- After deploying, share the live link immediately
 ```
 
-## Tech Stack
+Copy these into:
+- **Cursor Settings → Rules for AI** (global)
+- **`.cursor/rules/`** in your project (per-project)
 
-- **Pure HTML/CSS/JS** — No build step, no dependencies, just works
-- **IBM Plex Mono** for prompt text (optimal readability)
-- **Instrument Sans** for UI elements
-- **Static hosting ready** — Deploy anywhere
+---
 
-## Why This Exists
+## Privacy First
 
-Most prompt collections are either theoretical examples or buried in long blog posts. This gallery focuses on prompts that are:
+| Concern | How We Handle It |
+|---------|------------------|
+| Where does my data go? | **Nowhere.** 100% local processing. |
+| What data is accessed? | Only Cursor's local SQLite database. |
+| Is anything uploaded? | **No.** No network calls. No telemetry. |
+| Can I verify this? | Yes — it's ~200 lines of Python. [Read it](cursor-habits/cursor_habits.py). |
 
-- **Battle-tested** — Used in real projects with real results
-- **Immediately usable** — Copy and paste, no modification needed  
-- **Properly categorized** — Find what you need quickly
-- **Accessible** — Works offline, loads fast, no tracking
+---
 
-Built for people who use AI tools daily and need reliable prompts that actually work.
+## Repository Structure
+
+```
+.
+├── cursor-habits/          ← The CLI tool (main attraction)
+│   ├── cursor_habits.py    ← Run this
+│   ├── suggested_rules.md  ← Example output
+│   └── README.md           ← Detailed docs
+│
+├── nextjs-app/             ← Landing page website
+│   └── ...                 ← https://prmpt-hstry.vercel.app
+│
+└── README.md               ← You are here
+```
+
+---
+
+## Links
+
+- **Website:** [prmpt-hstry.vercel.app](https://prmpt-hstry.vercel.app)
+- **CLI Tool:** [cursor-habits/](cursor-habits/)
+- **Twitter:** [@rohunvora](https://twitter.com/rohunvora)
+
+---
+
+## License
+
+MIT — do whatever you want with it.
+
+---
+
+<div align="center">
+  <strong>Stop repeating yourself. Let your history write your rules.</strong>
+</div>

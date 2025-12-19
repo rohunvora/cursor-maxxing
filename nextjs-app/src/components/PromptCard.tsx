@@ -1,77 +1,82 @@
-'use client'
+/**
+ * PromptCard - Displays a prompt with copy functionality
+ * 
+ * Warm aesthetic matching cursorhabits design.
+ */
 
-import { useState } from 'react'
-import { Copy, Check } from 'lucide-react'
+'use client';
+
+import { Copy, Check } from 'lucide-react';
+import type { PromptData } from '@/lib/prompts-data';
 
 interface PromptCardProps {
-  title: string
-  description: string
-  category: string
-  modelTag: string
-  prompt: string
+  prompt: PromptData;
+  onCopy: () => void;
+  copied: boolean;
 }
 
-export function PromptCard({ title, description, category, modelTag, prompt }: PromptCardProps) {
-  const [copied, setCopied] = useState(false)
+const categoryColors: Record<string, { bg: string; text: string }> = {
+  coding: { bg: 'bg-accent-secondary/15', text: 'text-accent-secondary' },
+  writing: { bg: 'bg-accent-primary/15', text: 'text-accent-primary' },
+  analysis: { bg: 'bg-accent-tertiary/30', text: 'text-amber-700' },
+  creative: { bg: 'bg-purple-100', text: 'text-purple-700' },
+  system: { bg: 'bg-slate-100', text: 'text-slate-700' },
+};
 
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(prompt)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
-      console.error('Failed to copy:', err)
-    }
-  }
+export default function PromptCard({ prompt, onCopy, copied }: PromptCardProps) {
+  const colorScheme = categoryColors[prompt.category] || categoryColors.coding;
 
   return (
-    <article className="h-full bg-bg-card border border-border-subtle rounded-2xl p-8 transition-all duration-150 hover:border-border-medium hover:-translate-y-0.5 animate-fadeIn flex flex-col">
-      {/* Category badge + model tag */}
-      <div className="flex items-center gap-3 mb-4">
-        <span className="font-mono text-[0.7rem] font-semibold uppercase tracking-wide px-3 py-1.5 bg-accent-light text-accent-primary rounded-lg">
-          {category}
-        </span>
-        <span className="text-xs text-text-muted">{modelTag}</span>
-      </div>
-      
-      {/* Title */}
-      <h2 className="text-lg font-semibold tracking-tight mb-2 text-text-primary">
-        {title}
-      </h2>
-      
-      {/* Description */}
-      <p className="text-sm text-text-secondary mb-5 leading-relaxed">
-        {description}
-      </p>
-      
-      {/* Prompt code block - clickable to copy */}
-      <div 
-        onClick={copyToClipboard}
-        className="relative mt-auto bg-bg-secondary border border-border-subtle rounded-xl p-5 pr-14 cursor-pointer transition-all duration-150 hover:border-accent-primary max-h-36 overflow-hidden"
-        tabIndex={0}
-        role="button"
-        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && copyToClipboard()}
-      >
-        <pre className="font-mono text-[0.8rem] leading-relaxed text-text-secondary whitespace-pre-wrap break-words m-0">
-          {prompt}
-        </pre>
-        
-        {/* Fade overlay for long prompts */}
-        <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-bg-secondary to-transparent pointer-events-none" />
-        
-        {/* Copy button */}
+    <article className="card p-6 flex flex-col h-full cursor-pointer group hover:shadow-lg transition-all duration-200" onClick={onCopy}>
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 mb-4">
+        <div className="flex-1 min-w-0">
+          <span className={`inline-block px-2.5 py-1 rounded-md text-xs font-mono font-medium ${colorScheme.bg} ${colorScheme.text} mb-3`}>
+            {prompt.category}
+          </span>
+          <h3 className="font-display font-semibold text-lg text-text-primary leading-tight">
+            {prompt.title}
+          </h3>
+        </div>
         <button 
-          onClick={(e) => { e.stopPropagation(); copyToClipboard(); }}
-          className={`absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-lg border transition-all duration-150 ${
-            copied 
-              ? 'bg-success-light border-success text-success'
-              : 'bg-bg-card border-border-subtle text-text-muted hover:border-border-medium hover:text-text-primary'
-          }`}
-          aria-label="Copy prompt"
+          className="p-2 rounded-lg border border-border-subtle bg-bg-primary opacity-0 group-hover:opacity-100 transition-opacity hover:border-accent-primary hover:text-accent-primary"
+          onClick={(e) => {
+            e.stopPropagation();
+            onCopy();
+          }}
+          aria-label={copied ? "Copied!" : "Copy prompt"}
         >
-          {copied ? <Check size={18} /> : <Copy size={18} />}
+          {copied ? (
+            <Check size={16} className="text-accent-secondary" />
+          ) : (
+            <Copy size={16} />
+          )}
         </button>
       </div>
+
+      {/* Description */}
+      <p className="text-sm text-text-secondary mb-4 flex-grow">
+        {prompt.description}
+      </p>
+
+      {/* Preview */}
+      <div className="bg-bg-code rounded-lg p-4 overflow-hidden">
+        <pre className="text-xs text-terminal-text font-mono whitespace-pre-wrap break-words line-clamp-4">
+          {prompt.prompt.slice(0, 200)}{prompt.prompt.length > 200 ? '...' : ''}
+        </pre>
+      </div>
+
+      {/* Model tag */}
+      <div className="mt-4 flex items-center justify-between">
+        <span className="text-xs text-text-muted font-mono">
+          {prompt.modelTag}
+        </span>
+        {copied && (
+          <span className="text-xs text-accent-secondary font-medium">
+            Copied!
+          </span>
+        )}
+      </div>
     </article>
-  )
+  );
 }

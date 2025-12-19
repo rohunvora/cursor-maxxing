@@ -1,113 +1,38 @@
-'use client'
+/**
+ * Header - cursorhabits
+ * 
+ * Minimal header: logo/brand + GitHub link
+ */
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Github } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
-import { useEffect, useState } from 'react'
-import type { User } from '@supabase/supabase-js'
+'use client';
 
-export function Header() {
-  const pathname = usePathname()
-  const [user, setUser] = useState<User | null>(null)
-  const supabase = createClient()
+import { Github } from 'lucide-react';
 
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-    }
-    getUser()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: unknown, session: { user: User | null } | null) => {
-      setUser(session?.user ?? null)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [supabase])
-
-  const isActive = (path: string) => pathname === path
-
+export default function Header() {
   return (
-    <header className="bg-bg-card border-b border-border-subtle sticky top-0 z-50">
-      <nav className="flex items-center justify-between max-w-6xl mx-auto px-6 py-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 no-underline">
-          <span className="text-2xl text-accent-primary">⌘</span>
-          <span className="text-xl font-semibold tracking-tight text-text-primary">
-            prompt.gallery
+    <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/80 backdrop-blur-md border-b border-border-subtle">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        {/* Logo/Brand */}
+        <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <div className="w-8 h-8 rounded-lg bg-accent-primary flex items-center justify-center">
+            <span className="text-white font-mono font-bold text-sm">ch</span>
+          </div>
+          <span className="font-display font-semibold text-text-primary text-lg">
+            cursorhabits
           </span>
-        </Link>
-        
-        {/* Navigation */}
-        <div className="flex items-center gap-1">
-          <Link 
-            href="/" 
-            className={`text-sm font-medium px-3 py-2 rounded-xl transition-colors no-underline ${
-              isActive('/') 
-                ? 'text-accent-primary bg-accent-light' 
-                : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
-            }`}
-          >
-            Prompts
-          </Link>
-          
-          <Link 
-            href="/showcases" 
-            className={`text-sm font-medium px-3 py-2 rounded-xl transition-colors no-underline ${
-              pathname.startsWith('/showcase') 
-                ? 'text-accent-primary bg-accent-light' 
-                : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
-            }`}
-          >
-            Showcases
-          </Link>
-          
-          <Link 
-            href="/export" 
-            className={`text-sm font-medium px-3 py-2 rounded-xl flex items-center gap-2 transition-colors no-underline ${
-              isActive('/export') 
-                ? 'text-accent-primary bg-accent-light' 
-                : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
-            }`}
-          >
-            Export
-            <span className="font-mono text-[0.6rem] font-semibold tracking-wide px-1.5 py-0.5 rounded bg-accent-primary text-white">
-              NEW
-            </span>
-          </Link>
+        </a>
 
-          {user ? (
-            <Link 
-              href="/dashboard" 
-              className={`text-sm font-medium px-3 py-2 rounded-xl transition-colors no-underline ${
-                isActive('/dashboard') 
-                  ? 'text-accent-primary bg-accent-light' 
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
-              }`}
-            >
-              Dashboard
-            </Link>
-          ) : (
-            <Link 
-              href="/auth" 
-              className="text-sm font-medium px-4 py-2 bg-accent-primary text-white rounded-xl hover:bg-accent-secondary transition-colors no-underline ml-2"
-            >
-              Sign In
-            </Link>
-          )}
-          
-          <a 
-            href="https://github.com/rohunvora/prmpt-hstry" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-text-muted hover:text-text-primary transition-colors ml-2 p-2"
-            aria-label="View on GitHub"
-          >
-            <Github size={20} />
-          </a>
-        </div>
-      </nav>
+        {/* GitHub Link */}
+        <a 
+          href="https://github.com/rohunvora/prmpt-hstry/tree/main/cursor-habits"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-subtle bg-bg-card hover:border-accent-primary hover:text-accent-primary transition-all duration-150 text-text-secondary"
+        >
+          <Github size={18} />
+          <span className="font-medium text-sm hidden sm:inline">GitHub</span>
+        </a>
+      </div>
     </header>
-  )
+  );
 }

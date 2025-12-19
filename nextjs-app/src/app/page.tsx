@@ -90,13 +90,13 @@ export default function Home() {
             </div>
 
             <div className="bg-bg-card border border-border-subtle rounded-xl p-8 sm:p-12">
-              <div className="font-mono text-sm sm:text-base space-y-4 text-text-secondary">
-                <p className="text-text-muted">You, to Cursor, for the 127th time:</p>
+              <div className="font-mono text-base space-y-4 text-text-secondary">
+                <p className="text-text-tertiary">You, to Cursor, for the 127th time:</p>
                 <p className="text-accent-primary">"Push to GitHub after every change"</p>
                 <p className="text-accent-primary">"Don't test locally, deploy to Vercel"</p>
                 <p className="text-accent-primary">"Always check mobile"</p>
                 <p className="text-accent-primary">"Add that key to .env"</p>
-                <p className="text-text-muted mt-6">
+                <p className="text-text-tertiary mt-6">
                   These are your habits. You shouldn't have to repeat them.
                 </p>
               </div>
@@ -131,9 +131,9 @@ export default function Home() {
                 <div className="w-14 h-14 rounded-xl bg-accent-light flex items-center justify-center mx-auto mb-6">
                   <Terminal className="text-accent-primary" size={28} />
                 </div>
-                <div className="font-mono text-xs text-accent-primary mb-2">01</div>
+                <div className="font-mono text-sm font-semibold text-accent-primary mb-2">01</div>
                 <h3 className="font-display text-xl font-semibold text-text-primary mb-3">Run</h3>
-                <p className="text-text-secondary text-sm">
+                <p className="text-text-secondary text-base">
                   One command. Scans your local Cursor database for chat patterns.
                 </p>
               </div>
@@ -143,9 +143,9 @@ export default function Home() {
                 <div className="w-14 h-14 rounded-xl bg-accent-light flex items-center justify-center mx-auto mb-6">
                   <FileText className="text-accent-primary" size={28} />
                 </div>
-                <div className="font-mono text-xs text-accent-primary mb-2">02</div>
+                <div className="font-mono text-sm font-semibold text-accent-primary mb-2">02</div>
                 <h3 className="font-display text-xl font-semibold text-text-primary mb-3">Review</h3>
-                <p className="text-text-secondary text-sm">
+                <p className="text-text-secondary text-base">
                   See what patterns were detected. Edit the generated rules if needed.
                 </p>
               </div>
@@ -155,9 +155,9 @@ export default function Home() {
                 <div className="w-14 h-14 rounded-xl bg-accent-light flex items-center justify-center mx-auto mb-6">
                   <Copy className="text-accent-primary" size={28} />
                 </div>
-                <div className="font-mono text-xs text-accent-primary mb-2">03</div>
+                <div className="font-mono text-sm font-semibold text-accent-primary mb-2">03</div>
                 <h3 className="font-display text-xl font-semibold text-text-primary mb-3">Paste</h3>
-                <p className="text-text-secondary text-sm">
+                <p className="text-text-secondary text-base">
                   Copy into your .cursorrules file. Cursor now knows your preferences.
                 </p>
               </div>
@@ -277,7 +277,7 @@ export default function Home() {
               </a>
             </div>
 
-            <p className="text-sm text-text-muted">
+            <p className="text-base text-text-tertiary">
               Requires Python 3.8+ and Cursor installed
             </p>
           </div>
@@ -312,7 +312,7 @@ export default function Home() {
 
             {allPrompts.length > 6 && (
               <div className="text-center mt-12">
-                <p className="text-text-muted text-sm">
+                <p className="text-text-tertiary text-base">
                   {allPrompts.length - 6} more prompts available • 
                   <a href="#" className="text-accent-primary hover:underline ml-1">View all</a>
                 </p>
